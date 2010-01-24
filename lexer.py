@@ -41,6 +41,30 @@ class IndentLexer:
 		yield self.indent_token
 
 
+class VSpaceLexer:
+	def __init__(self, linesrc, token="VSPACE\n"):
+		self.linesrc = linesrc
+		self.token = token
+		self.stash = []
+
+	def __iter__(self):
+		stash = []
+		for line in self.linesrc:
+			for enil in self._lexLine(line):  yield enil
+		for oldLine in self._emptyStash():  yield oldLine
+
+	
+	def _lexLine(self, line):
+		if not line.strip():
+			self.stash.append(line);  return
+		if len(self.stash):  
+			yield self.token
+			for oldLine in self._emptyStash():  yield oldLine
+		yield line
+
+	def _emptyStash(self):
+		for oldLine in self.stash:  yield oldLine
+		del self.stash[:]
 
 
 
