@@ -1,10 +1,13 @@
 from itertools import takewhile
 
-__all__ = ['Lexer', 'Injector', 'isToken', 
+__all__ = ['Lexer', 'Injector', 'isToken', 'isWhite', 
 		'IndentLexer', 'VSpaceLexer', 'ItemLexer', 'LineEndLexer']
 
 def isToken(line):
 	return line[0]=="^"
+
+def isWhite(line):
+	return not line.rstrip()
 
 class Lexer:
 	def __init__(self, linesrc, ignore=isToken):
@@ -113,7 +116,8 @@ class ItemLexer(Injector):
 
 
 class LineEndLexer(Lexer):
-	def __init__(self, linesrc, ignore=isToken, token="$"):
+	def __init__(self, linesrc, ignore=lambda line: isToken(line) \
+			or isWhite(line), token="$"):
 		Lexer.__init__(self, linesrc, ignore)
 		self.token = token
 
