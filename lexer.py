@@ -1,6 +1,6 @@
 from itertools import takewhile
 
-__all__ = ['IndentLexer', 'VSpaceLexer']
+__all__ = ['IndentLexer', 'VSpaceLexer', 'ItemLexer']
 
 class IndentLexer:
 	def __init__(self, linesrc, indent_chars=' \t', 
@@ -71,4 +71,19 @@ class VSpaceLexer:
 		del self.stash[:]
 
 
-
+class ItemLexer:
+	def __init__(self, linesrc, itemWords=["-"], token="^ITEM\n"):
+		self.linesrc = linesrc
+		self.token = token
+		self.itemWords = itemWords
+	
+	def __iter__(self):
+		for line in self.linesrc:
+			for enil in self._lexLine(line):
+				yield enil
+			yield line
+	
+	def _lexLine(self, line):
+		linestr = line.lstrip()
+		if any(map(linestr.startswith, self.itemWords)):
+			yield self.token
