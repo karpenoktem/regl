@@ -1,13 +1,13 @@
 from itertools import takewhile
 
-__all__ = ['Lexer', 'Injector', 'ignoreTokens', 
+__all__ = ['Lexer', 'Injector', 'isToken', 
 		'IndentLexer', 'VSpaceLexer', 'ItemLexer', 'LineEndLexer']
 
-def ignoreTokens(line):
+def isToken(line):
 	return line[0]=="^"
 
 class Lexer:
-	def __init__(self, linesrc, ignore=ignoreTokens):
+	def __init__(self, linesrc, ignore=isToken):
 		self.linesrc = linesrc
 		self.ignore = ignore
 	
@@ -28,7 +28,7 @@ class Lexer:
 		if False: yield 42
 
 class Injector(Lexer):
-	def __init__(self, linesrc, ignore=ignoreTokens):
+	def __init__(self, linesrc, ignore=isToken):
 		Lexer.__init__(self, linesrc, ignore)
 	
 	def _lexLine(self, line):
@@ -39,7 +39,7 @@ class Injector(Lexer):
 		raise NotImplementedError()
 
 class IndentLexer(Injector):
-	def __init__(self, linesrc, ignore=ignoreTokens, indent_chars=' \t', 
+	def __init__(self, linesrc, ignore=isToken, indent_chars=' \t', 
 			indent_token='^INDENT\n', dedent_token='^DEDENT\n',
 			ignoreWhiteLines=True):
 		Injector.__init__(self, linesrc, ignore)
@@ -78,7 +78,7 @@ class IndentLexer(Injector):
 
 
 class VSpaceLexer(Lexer):
-	def __init__(self, linesrc, ignore=ignoreTokens, token="^VSPACE\n"):
+	def __init__(self, linesrc, ignore=isToken, token="^VSPACE\n"):
 		Lexer.__init__(self, linesrc, ignore)
 		self.token = token
 		self.stash = []
@@ -100,7 +100,7 @@ class VSpaceLexer(Lexer):
 
 
 class ItemLexer(Injector):
-	def __init__(self, linesrc, ignore=ignoreTokens, itemWords=["-"], 
+	def __init__(self, linesrc, ignore=isToken, itemWords=["-"], 
 			token="^ITEM\n"):
 		Injector.__init__(self, linesrc, ignore)
 		self.token = token
@@ -113,7 +113,7 @@ class ItemLexer(Injector):
 
 
 class LineEndLexer(Lexer):
-	def __init__(self, linesrc, ignore=ignoreTokens, token="$"):
+	def __init__(self, linesrc, ignore=isToken, token="$"):
 		Lexer.__init__(self, linesrc, ignore)
 		self.token = token
 
