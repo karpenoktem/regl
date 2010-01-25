@@ -1,28 +1,55 @@
 from itertools import takewhile
 
-__all__ = ['IndentLexer', 'VSpaceLexer', 'ItemLexer']
+__all__ = ['Lexer', 'Injector', 'ignoreTokens', 
+		'IndentLexer', 'VSpaceLexer', 'ItemLexer', 'LineEndLexer']
 
-class IndentLexer:
-	def __init__(self, linesrc, indent_chars=' \t', 
+def ignoreTokens(line):
+	return line[0]=="^"
+
+class Lexer:
+	def __init__(self, linesrc, ignore=ignoreTokens):
+		self.linesrc = linesrc
+		self.ignore = ignore
+	
+	def __iter__(self):
+		for line in self.linesrc:
+			if self.ignore(line):
+				yield line
+				continue
+			for enil in self._lexLine(line):
+				yield enil
+		for line in self._lexEnd():
+			yield line
+
+	def _lexLine(self, line):
+		raise NotImplementedError()
+
+	def _lexEnd(self):
+		if False: yield 42
+
+class Injector(Lexer):
+	def __init__(self, linesrc, ignore=ignoreTokens):
+		Lexer.__init__(self, linesrc, ignore)
+	
+	def _lexLine(self, line):
+		for token in self._getInjectees(line): yield token
+		yield line
+	
+	def _getInjectees(self, line):
+		raise NotImplementedError()
+
+class IndentLexer(Injector):
+	def __init__(self, linesrc, ignore=ignoreTokens, indent_chars=' \t', 
 			indent_token='^INDENT\n', dedent_token='^DEDENT\n',
 			ignoreWhiteLines=True):
-		self.linesrc = linesrc
+		Injector.__init__(self, linesrc, ignore)
 		self.indent_chars = indent_chars
 		self.indent_token = indent_token
 		self.dedent_token = dedent_token
 		self.ignoreWhiteLines = ignoreWhiteLines
 		self.indent_stack = []
-	
-	def __iter__(self):
-		for line in self.linesrc:
-			for token in self._lex_line(line):
-				yield token
-			yield line
-		while len(self.indent_stack):
-			self.indent_stack.pop()
-			yield self.dedent_token
 
-	def _lex_line(self, line):
+	def _getInjectees(self, line):
 		depth = 0
 		count = 0
 		if self.ignoreWhiteLines:
@@ -44,20 +71,18 @@ class IndentLexer:
 		self.indent_stack.append(new_indent)
 		yield self.indent_token
 
+	def _lexEnd(self):
+		while len(self.indent_stack):
+			self.indent_stack.pop()
+			yield self.dedent_token
 
-class VSpaceLexer:
-	def __init__(self, linesrc, token="^VSPACE\n"):
-		self.linesrc = linesrc
+
+class VSpaceLexer(Lexer):
+	def __init__(self, linesrc, ignore=ignoreTokens, token="^VSPACE\n"):
+		Lexer.__init__(self, linesrc, ignore)
 		self.token = token
 		self.stash = []
 
-	def __iter__(self):
-		stash = []
-		for line in self.linesrc:
-			for enil in self._lexLine(line):  yield enil
-		for oldLine in self._emptyStash():  yield oldLine
-
-	
 	def _lexLine(self, line):
 		if not line.strip():
 			self.stash.append(line);  return
@@ -66,24 +91,34 @@ class VSpaceLexer:
 			for oldLine in self._emptyStash():  yield oldLine
 		yield line
 
+	def _lexEnd(self):
+		return self._emptyStash()
+
 	def _emptyStash(self):
 		for oldLine in self.stash:  yield oldLine
 		del self.stash[:]
 
 
-class ItemLexer:
-	def __init__(self, linesrc, itemWords=["-"], token="^ITEM\n"):
-		self.linesrc = linesrc
+class ItemLexer(Injector):
+	def __init__(self, linesrc, ignore=ignoreTokens, itemWords=["-"], 
+			token="^ITEM\n"):
+		Injector.__init__(self, linesrc, ignore)
 		self.token = token
 		self.itemWords = itemWords
 	
-	def __iter__(self):
-		for line in self.linesrc:
-			for enil in self._lexLine(line):
-				yield enil
-			yield line
-	
-	def _lexLine(self, line):
+	def _getInjectees(self, line):
 		linestr = line.lstrip()
 		if any(map(linestr.startswith, self.itemWords)):
 			yield self.token
+
+
+class LineEndLexer(Lexer):
+	def __init__(self, linesrc, ignore=ignoreTokens, token="$"):
+		Lexer.__init__(self, linesrc, ignore)
+		self.token = token
+
+	def _lexLine(self, line):
+		# Not compatible with "\n\r" line endings
+		yield line[:-1] + self.token + line[-1]
+
+
