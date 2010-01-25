@@ -4,7 +4,7 @@ __all__ = ['IndentLexer', 'VSpaceLexer']
 
 class IndentLexer:
 	def __init__(self, linesrc, indent_chars=' \t', 
-			indent_token='{\n', dedent_token='}\n',
+			indent_token='^INDENT\n', dedent_token='^DEDENT\n',
 			ignoreWhiteLines=True):
 		self.linesrc = linesrc
 		self.indent_chars = indent_chars
@@ -46,7 +46,7 @@ class IndentLexer:
 
 
 class VSpaceLexer:
-	def __init__(self, linesrc, token="VSPACE\n"):
+	def __init__(self, linesrc, token="^VSPACE\n"):
 		self.linesrc = linesrc
 		self.token = token
 		self.stash = []
