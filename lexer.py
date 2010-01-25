@@ -1,7 +1,9 @@
 from itertools import takewhile
+from string import ascii_letters
 
 __all__ = ['Lexer', 'Injector', 'isToken', 'isWhite', 
-		'IndentLexer', 'VSpaceLexer', 'ItemLexer', 'LineEndLexer']
+		'IndentLexer', 'VSpaceLexer', 'ItemLexer', 'LineEndLexer',
+		'CharMapLexer']
 
 def isToken(line):
 	return line[0]=="^"
@@ -125,4 +127,12 @@ class LineEndLexer(Lexer):
 		# Not compatible with "\n\r" line endings
 		yield line[:-1] + self.token + line[-1]
 
+
+class CharMapLexer(Lexer):
+	def __init__(self, linesrc, charMap, ignore=isToken):
+		Lexer.__init__(self, linesrc, ignore)
+		self.charMap = charMap
+		
+	def _lexLine(self, line):
+		yield ''.join([self.charMap[c] for c in line])	
 
