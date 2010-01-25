@@ -4,11 +4,13 @@ __all__ = ['IndentLexer', 'VSpaceLexer']
 
 class IndentLexer:
 	def __init__(self, linesrc, indent_chars=' \t', 
-			indent_token='{\n', dedent_token='}\n'):
+			indent_token='{\n', dedent_token='}\n',
+			ignoreWhiteLines=True):
 		self.linesrc = linesrc
 		self.indent_chars = indent_chars
 		self.indent_token = indent_token
 		self.dedent_token = dedent_token
+		self.ignoreWhiteLines = ignoreWhiteLines
 		self.indent_stack = []
 	
 	def __iter__(self):
@@ -23,6 +25,8 @@ class IndentLexer:
 	def _lex_line(self, line):
 		depth = 0
 		count = 0
+		if self.ignoreWhiteLines:
+			line = line.rstrip()
 		# get remaining indentation
 		indent_present = lambda ind: line[depth:].startswith(ind)
 		for indent in takewhile(indent_present, self.indent_stack):
