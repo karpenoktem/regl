@@ -11,3 +11,6 @@ def comp(*funcs):
 
 def compit(it):
 	return reduce(comp2, it, id)
+
+def dict_invert(d):
+	return dict([(v,k) for (k,v) in d.iteritems()])
