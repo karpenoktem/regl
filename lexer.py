@@ -97,7 +97,9 @@ class VSpaceLexer(Lexer):
 		yield line
 
 	def _lexEnd(self):
-		return self._emptyStash()
+		for line in self._emptyStash():
+			yield line
+		yield self.token
 
 	def _emptyStash(self):
 		for oldLine in self.stash:  yield oldLine
