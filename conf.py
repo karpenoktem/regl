@@ -2,11 +2,12 @@ from string import whitespace, ascii_letters, digits
 
 punctuation = ",.'\"/()-:;*?[]"
 specialChars = "#"
-indentTok = "^INDENT"
-dedentTok = "^DEDENT"
-vspaceTok = "^VSPACE"
+tokTok = "^"
+indentTok = tokTok + "INDENT"
+dedentTok = tokTok + "DEDENT"
+vspaceTok = tokTok + "VSPACE"
 lineEndTok = "$"
-itemTok = "^ITEM"
+itemTok = tokTok + "ITEM"
 sectionSignTok = "<section-sign>"
 commentTok = "#"
 

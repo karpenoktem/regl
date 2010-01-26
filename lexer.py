@@ -1,14 +1,15 @@
 from itertools import takewhile
 
 from aux import comp
-from conf import charMap, indentTok, dedentTok, vspaceTok, itemTok, lineEndTok
+from conf import charMap, indentTok, dedentTok, vspaceTok, itemTok, \
+		lineEndTok, tokTok
 
 __all__ = ['Lexer', 'Injector', 'isToken', 'isWhite', 
 		'IndentLexer', 'VSpaceLexer', 'ItemLexer', 'LineEndLexer',
 		'CharMapLexer', 'PyCommentLexer', 'ReglLexer']
 
 def isToken(line):
-	return line[0]=="^"
+	return line.startswith(tokTok)
 
 def isWhite(line):
 	return not line.rstrip()
