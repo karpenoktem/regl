@@ -1,8 +1,9 @@
 from itertools import takewhile
+from string import whitespace
 
-from aux import comp
+from aux import comp, const, regions_satisfying, string_regions_replace
 from conf import charMap, indentTok, dedentTok, vspaceTok, itemTok, \
-		lineEndTok, tokTok
+		lineEndTok, tokTok, hspaceTok
 
 __all__ = ['Lexer', 'Injector', 'isToken', 'isWhite', 
 		'IndentLexer', 'VSpaceLexer', 'ItemLexer', 'LineEndLexer',
@@ -153,6 +154,34 @@ class PyCommentLexer(Lexer):
 		yield line[:idx] + "\n" if idx>=0 else line 
 
 
+def defaultIsHSpace(start, stop, line):
+	"""Returns True iff the slice is not at the end or start of the
+	line and is either at least 2 characters wide or a tab."""
+	if start==0 or stop>=len(line)-1:
+		return False
+	if stop - start > 1:
+		return True
+	return line[start]=="\t"
+
+
+class HSpaceLexer(Lexer):
+	def __init__(self, linesrc, ignore=const(False),
+			isHSpace=defaultIsHSpace,
+			token=hspaceTok):
+		Lexer.__init__(self, linesrc, ignore)
+		self.isHSpace = isHSpace
+		self.token = token
+
+	def _lexLine(self, line):
+		isWhitespace = lambda c: c in whitespace
+		hsregions = [(start,stop) for start,stop 
+				in regions_satisfying(isWhitespace, line)
+				if self.isHSpace(start,stop,line)]
+		yield string_regions_replace(line, hsregions, 
+				const(self.token))
+
+				
 def ReglLexer(linesrc):
 	return comp(LineEndLexer, ItemLexer, VSpaceLexer, IndentLexer, 
-			PyCommentLexer, CharMapLexer)(linesrc, charMap)
+			PyCommentLexer, HSpaceLexer, 
+			CharMapLexer)(linesrc, charMap)
