@@ -3,7 +3,7 @@ from string import ascii_letters
 
 __all__ = ['Lexer', 'Injector', 'isToken', 'isWhite', 
 		'IndentLexer', 'VSpaceLexer', 'ItemLexer', 'LineEndLexer',
-		'CharMapLexer']
+		'CharMapLexer', 'PyCommentLexer']
 
 def isToken(line):
 	return line[0]=="^"
@@ -137,4 +137,13 @@ class CharMapLexer(Lexer):
 		
 	def _lexLine(self, line):
 		yield ''.join([self.charMap[c] for c in line])	
+
+
+class PyCommentLexer(Lexer):
+	def __init__(self, linesrc, ignore=isToken):
+		Lexer.__init__(self, linesrc, ignore)
+	
+	def _lexLine(self, line):
+		idx = line.find("#")
+		yield line[:idx] + "\n" if idx>=0 else line 
 
