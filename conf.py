@@ -1,5 +1,7 @@
 from string import whitespace, ascii_letters, digits
 
+from aux import dict_invert
+
 punctuation = ",.'\"/()-:;*?[]"
 specialChars = "#"
 tokTok = "^"
@@ -32,4 +34,4 @@ def createCharMap():
 		charMap[c]=n
 	return charMap
 charMap = createCharMap()  # can decorators do this?
-
+charMapI = dict_invert(charMap)
