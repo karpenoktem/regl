@@ -1,9 +1,11 @@
 from itertools import takewhile
-from string import ascii_letters
+
+from aux import comp
+from conf import charMap, indentTok, dedentTok, vspaceTok, itemTok, lineEndTok
 
 __all__ = ['Lexer', 'Injector', 'isToken', 'isWhite', 
 		'IndentLexer', 'VSpaceLexer', 'ItemLexer', 'LineEndLexer',
-		'CharMapLexer', 'PyCommentLexer']
+		'CharMapLexer', 'PyCommentLexer', 'ReglLexer']
 
 def isToken(line):
 	return line[0]=="^"
@@ -45,7 +47,8 @@ class Injector(Lexer):
 
 class IndentLexer(Injector):
 	def __init__(self, linesrc, ignore=isToken, indent_chars=' \t', 
-			indent_token='^INDENT\n', dedent_token='^DEDENT\n',
+			indent_token=indentTok+'\n', 
+			dedent_token=dedentTok+'\n',
 			ignoreWhiteLines=True):
 		Injector.__init__(self, linesrc, ignore)
 		self.indent_chars = indent_chars
@@ -83,7 +86,8 @@ class IndentLexer(Injector):
 
 
 class VSpaceLexer(Lexer):
-	def __init__(self, linesrc, ignore=isToken, token="^VSPACE\n"):
+	def __init__(self, linesrc, ignore=lambda l: False, 
+			token=vspaceTok+"\n"):
 		Lexer.__init__(self, linesrc, ignore)
 		self.token = token
 		self.stash = []
@@ -108,7 +112,7 @@ class VSpaceLexer(Lexer):
 
 class ItemLexer(Injector):
 	def __init__(self, linesrc, ignore=isToken, itemWords=["-"], 
-			token="^ITEM\n"):
+			token=itemTok+"\n"):
 		Injector.__init__(self, linesrc, ignore)
 		self.token = token
 		self.itemWords = itemWords
@@ -121,7 +125,7 @@ class ItemLexer(Injector):
 
 class LineEndLexer(Lexer):
 	def __init__(self, linesrc, ignore=lambda line: isToken(line) \
-			or isWhite(line), token="$"):
+			or isWhite(line), token=lineEndTok):
 		Lexer.__init__(self, linesrc, ignore)
 		self.token = token
 
@@ -147,3 +151,7 @@ class PyCommentLexer(Lexer):
 		idx = line.find("#")
 		yield line[:idx] + "\n" if idx>=0 else line 
 
+
+def ReglLexer(linesrc):
+	return comp(LineEndLexer, ItemLexer, VSpaceLexer, IndentLexer, 
+			PyCommentLexer, CharMapLexer)(linesrc, charMap)
