@@ -32,3 +32,5 @@ def string_regions_replace(str, regions, replacement):
 		else replacement(p[i],p[i+1]) 
 		for i in xrange(len(p)-1)])
 
+def chop(str, size=30):
+	return str if len(str) < size else str[0:size] + "..."
