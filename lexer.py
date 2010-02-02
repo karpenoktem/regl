@@ -49,8 +49,8 @@ class Injector(Lexer):
 
 class IndentLexer(Injector):
 	def __init__(self, linesrc, ignore=isToken, indent_chars=' \t', 
-			indent_token=indentTok+'\n', 
-			dedent_token=dedentTok+'\n',
+			indent_token=indentTok, 
+			dedent_token=dedentTok,
 			ignoreWhiteLines=True):
 		Injector.__init__(self, linesrc, ignore)
 		self.indent_chars = indent_chars
@@ -72,19 +72,19 @@ class IndentLexer(Injector):
 		# return the dedentation
 		while len(self.indent_stack) > count:
 			self.indent_stack.pop()
-			yield self.dedent_token
+			yield self.dedent_token + "\n"
 		# find the new indentation
 		is_indent_char = lambda c: c in self.indent_chars
 		new_indent = ''.join(takewhile(is_indent_char, line[depth:]))
 		if not new_indent:
 			return
 		self.indent_stack.append(new_indent)
-		yield self.indent_token
+		yield "%s %s\n" % (self.indent_token, repr(new_indent))
 
 	def _lexEnd(self):
 		while len(self.indent_stack):
 			self.indent_stack.pop()
-			yield self.dedent_token
+			yield self.dedent_token + "\n"
 
 
 class VSpaceLexer(Lexer):
