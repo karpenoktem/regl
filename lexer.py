@@ -182,6 +182,7 @@ class HSpaceLexer(Lexer):
 
 				
 def ReglLexer(linesrc):
-	return comp(LineEndLexer, VSpaceLexer, IndentLexer, 
+	return comp(LineEndLexer, #VSpaceLexer,
+			IndentLexer, 
 			PyCommentLexer, HSpaceLexer, 
 			CharMapLexer)(linesrc, charMap)
