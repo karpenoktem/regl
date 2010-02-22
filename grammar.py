@@ -48,7 +48,7 @@ def createBlock(itemHead, itemBody, itemTail):
 indent = indentTok + Suppress(quotedString)
 
 descriptionBlock = Forward()
-body = lines | descriptionBlock
+body = descriptionBlock | lines
 descriptionBlock << createBlock(line + indent, body, dedentTok)
 
 itemBlock = createBlock(words + hspaceTok, body, Empty())
