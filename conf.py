@@ -24,6 +24,7 @@ charNames = (
 		(u">", "<chevron-close>"),
 		(u"\xe9", "<e-acute>"),
 		(u"\xeb", "<e-umlaut>"),
+		(u"\xf3", "<o-acute>"),
 		(u"\xa7", sectionSignTok),
 		(u"\u20ac", "<euro-sign>"))
 
