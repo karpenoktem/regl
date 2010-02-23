@@ -16,8 +16,9 @@ class Document(object):
 	class parseTree_to_document_context:
 		def __init__(self, rootList):
 			self.document = Document()
-			self.stack = [(tuple(rootList), self.document.root,
-						self.section_handler)]
+			self.stack = [(tuple(rootList),		# i
+				       self.document.root,	# p
+				       self.section_handler)]	# h
 
 		def main(self):
 			while self.stack:
@@ -34,12 +35,6 @@ class Document(object):
 
 		def section_handler(self, i, p):
 			assert isinstance(i, tuple)
-			if all([isinstance(c, Item) for c in i]):
-				names = [c.name for c in i]
-				if all([n in conf.enumTokens for n in names]):
-					pass
-				if all([n.isdigit() for n in names]):
-					pass
 			for c in i:
 				if isinstance(c, basestring):
 					p.children.append(
@@ -47,12 +42,23 @@ class Document(object):
 					assert not self.children_of(c)
 					continue
 				assert isinstance(c, Item)
-				cp = SectionNode(self.document, c.name)
+				handler = self.section_handler
+				if c.name == conf.nilItemToken:
+					cp = NilItemNode(self.document)
+				elif c.name.startswith(
+						conf.articlePrefixToken):
+					cp = ArticleNode(self.document,
+							c.name)
+				elif c.name.startswith(
+						conf.NBPrefixToken):
+					cp = NBNode(self.document, c.name)
+				else:
+					cp = SectionNode(self.document,
+							c.name)
 				p.children.append(cp)
 				cc = self.children_of(c)
 				assert cc
-				self.stack.append((cc, cp,
-					self.section_handler))
+				self.stack.append((cc, cp, handler))
 	
 	@staticmethod
 	def from_parseTree(v):
@@ -87,7 +93,21 @@ class Document(object):
 
 class RootNode(Node):
 	def to_html(self, children, ctx):
-		return ''.join(children)
+		body = ''.join(children)
+		return """<html><head><style>
+				.section {
+				}
+				.articleTitle {
+					font-size: larger;
+				}
+				h1 {
+					text-align: center;
+				}
+				.NBtitle, .NB {
+					font-size: smaller;
+					padding-left: 10px;
+				}
+			  </style></head><body>%s</body></html>""" % body
 
 class TextNode(Node):
 	def __init__(self, document, text):
@@ -98,6 +118,10 @@ class TextNode(Node):
 		assert not children
 		return "<p>%s</p>" % self.text
 
+class NilItemNode(Node):
+	def to_html(self, children, ctx):
+		return ''.join(children)
+
 class SectionNode(Node):
 	def __init__(self, document, title):
 		super(SectionNode, self).__init__(document)
@@ -105,16 +129,38 @@ class SectionNode(Node):
 	
 	def pre_to_html(self, ctx):
 		ctx = dict(ctx)
-		if not 'h-depth' in ctx:
-			ctx['h-depth'] = 0
-		ctx['h-depth'] += 1
+		if not 'section-depth' in ctx:
+			ctx['section-depth'] = 0
+		ctx['section-depth'] += 1
 		return ctx
 
 	def to_html(self, children, ctx):
 		c_text = '' if children is None else ''.join(children)
-		return "<h%s>%s</h%s>%s" % (
-			ctx['h-depth'], self.title,
-			ctx['h-depth'], c_text)
+		return """ <h%s>%s</h%s>
+			   <div class='section section%s'>%s</div> """ % (
+			ctx['section-depth'], self.title,
+			ctx['section-depth'],
+			ctx['section-depth'], c_text)
+
+class ArticleNode(SectionNode):
+	def pre_to_html(self, ctx):
+		pass
+
+	def to_html(self, children, ctx):
+		c_text = '' if children is None else ''.join(children)
+		return """ <div class="articleTitle">%s</div>
+			   <div class='article'>%s</div> """ % (
+				self.title, c_text)
+
+class NBNode(SectionNode):
+	def pre_to_html(self, ctx):
+		pass
+
+	def to_html(self, children, ctx):
+		c_text = '' if children is None else ''.join(children)
+		return """ <div class="NBTitle">%s</div>
+			   <div class='NB'>%s</div> """ % (
+				self.title, c_text)
 
 if __name__ == '__main__':
 	import codecs

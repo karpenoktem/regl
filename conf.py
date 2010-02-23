@@ -14,6 +14,9 @@ sectionSignTok = "[section-sign]"
 superTok = "~"
 parTok = "]"
 commentTok = "#"
+nilItemToken = '0'
+articlePrefixToken = 'Artikel'
+NBPrefixToken = 'NB'
 specialChars = commentTok + superTok + parTok
 
 wordChars = ascii_letters + digits + punctuation
