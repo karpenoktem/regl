@@ -9,6 +9,9 @@ class Node(object):
 	def pre_to_html(self, ctx):
 		pass
 
+	def pre_to_tex(self, ctx):
+		pass
+
 class Document(object):
 	def __init__(self):
 		self.root = RootNode(self)
@@ -63,8 +66,12 @@ class Document(object):
 	@staticmethod
 	def from_parseTree(v):
 		return Document.parseTree_to_document_context(v).main()
-
+	
 	def to_html(self):
+		return self.to_x(lambda i,*args: i.pre_to_html(*args), 
+				lambda i,*args: i.to_html(*args))
+
+	def to_x(self, pre_call, call):
 		stack = [[True, self.root, None, [], dict()]]
 		while stack:
 			frame = stack[-1]
@@ -75,7 +82,7 @@ class Document(object):
 			else:
 				stack.pop()
 			if pre:
-				nctx = i.pre_to_html(ctx)
+				nctx = pre_call(i,ctx)
 				if nctx is None:
 					nctx = ctx
 				else:
@@ -85,7 +92,7 @@ class Document(object):
 						stack.append([True, c, frame,
 							[], nctx])
 			else:
-				nres = i.to_html(res, ctx)
+				nres = call(i, res, ctx)
 				if to is None:
 					assert not stack
 					return nres
