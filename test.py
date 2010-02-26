@@ -8,7 +8,7 @@ def _print(s):
 
 def test_parser():
 	with open("test.lexed") as file:
-		print regl.parseString(''.join(file.readlines()))[0]
+		return regl.parseString(''.join(file.readlines()))[0]
 
 def test_lexer():
 	with open("test.regl", "r", "utf-8") as src:
@@ -17,4 +17,4 @@ def test_lexer():
 				target.write(line)
 
 test_lexer()
-test_parser()
+pr = test_parser()
