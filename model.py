@@ -93,21 +93,7 @@ class Document(object):
 
 class RootNode(Node):
 	def to_html(self, children, ctx):
-		body = ''.join(children)
-		return """<html><head><style>
-				.section {
-				}
-				.articleTitle {
-					font-size: larger;
-				}
-				h1 {
-					text-align: center;
-				}
-				.NBtitle, .NB {
-					font-size: smaller;
-					padding-left: 10px;
-				}
-			  </style></head><body>%s</body></html>""" % body
+		return ''.join(children)
 
 class TextNode(Node):
 	def __init__(self, document, text):
