@@ -1,4 +1,6 @@
-from grammar import Item
+from grammar import Item, regl
+from StringIO import StringIO
+from lexer import ReglLexer
 import conf
 
 class Node(object):
@@ -63,6 +65,12 @@ class Document(object):
 	@staticmethod
 	def from_parseTree(v):
 		return Document.parseTree_to_document_context(v).main()
+
+	@staticmethod
+	def from_string(s):
+		f = StringIO(s)
+		return Document.from_parseTree(regl.parseString(
+				''.join(ReglLexer(f)))[0])
 
 	def to_html(self):
 		stack = [[True, self.root, None, [], dict()]]
@@ -150,8 +158,6 @@ class NBNode(SectionNode):
 
 if __name__ == '__main__':
 	import codecs
-	from grammar import regl
-	from lexer import ReglLexer
 	with codecs.open('test.regl', 'r', 'utf-8') as f:
 		doc = Document.from_parseTree(regl.parseString(
 				''.join(ReglLexer(f)))[0])
