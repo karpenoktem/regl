@@ -7,6 +7,10 @@ from model import Document
 from lexer import ReglLexer
 
 if __name__ == '__main__':
+	if sys.stdout.encoding is None or \
+	   sys.stdin.encoding is None:
+		reload(sys)
+		sys.setdefaultencoding('utf-8')
 	to_close = []
 	if len(sys.argv) > 1:
 		if len(sys.argv) > 2:
