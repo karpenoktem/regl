@@ -130,7 +130,7 @@ class NilItemNode(Node):
 	def to_html(self, children, ctx):
 		return ''.join(children)
 
-	def to_LaTeX(self, childrenm ctx):
+	def to_LaTeX(self, children, ctx):
 		return ''.join(children)
 
 class SectionNode(Node):
