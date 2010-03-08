@@ -115,7 +115,7 @@ class RootNode(Node):
 		return ''.join(children)
 	def to_LaTeX(self, children, ctx):
 		c_text = ''.join(children)
-		return r"""
+		text = r"""
 		\documentclass[dutch]{article}
 		\usepackage{babel}
 		\usepackage{amsthm}
@@ -154,7 +154,9 @@ class RootNode(Node):
 		\printindex
 
 		\end{document} """ % c_text
-
+		for c, r in conf.LaTeXCharMap.iteritems():
+			text = text.replace(c, r)
+		return text
 
 
 class TextNode(Node):
