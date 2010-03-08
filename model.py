@@ -132,7 +132,7 @@ class RootNode(Node):
 		\end{enumerate}}
 		\newcommand{\stub}[1]{\comment{Nog te herschrijven.}}
 		\newcommand{\stref}[1]{ST#1}
-		\newcommand{\defn}[1]{\textbf{#1} \index{#1}}
+		\newcommand{\defn}[1]{\textbf{#1}\index{#1}}
 
 		\newtheoremstyle{comment}%%
 			{3pt}       %% Space Above
