@@ -120,7 +120,9 @@ class RootNode(Node):
 		\usepackage{babel}
 		\usepackage{amsthm}
 		\usepackage{eurosym}
+		\usepackage{makeidx}
 
+		\makeindex
 		\newcommand{\noun}[1]{\textsc{#1}}
 
 		\newcommand{\comment}[1]{
@@ -130,7 +132,7 @@ class RootNode(Node):
 		\end{enumerate}}
 		\newcommand{\stub}[1]{\comment{Nog te herschrijven.}}
 		\newcommand{\stref}[1]{ST#1}
-		\newcommand{\defn}[1]{\textbf{#1}}
+		\newcommand{\defn}[1]{\textbf{#1} \index{#1}}
 
 		\newtheoremstyle{comment}%%
 			{3pt}       %% Space Above
@@ -142,11 +144,14 @@ class RootNode(Node):
 			{.5em}      %% Space after theorem head
 			{}          %% Theorem head space
 
+
 		\begin{document}
 
 		%s
 
 		\maketitle
+		
+		\printindex
 
 		\end{document} """ % c_text
 
