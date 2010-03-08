@@ -168,5 +168,5 @@ if __name__ == '__main__':
 	with codecs.open('test.regl', 'r', 'utf-8') as f:
 		doc = Document.from_parseTree(regl.parseString(
 				''.join(ReglLexer(f)))[0])
-		with open('test.html', 'w') as f:
+		with codecs.open('test.html', 'w', 'utf-8') as f:
 			f.write(doc.to_html())
