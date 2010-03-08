@@ -11,7 +11,7 @@ class Node(object):
 	def pre_to_html(self, ctx):
 		pass
 
-	def pre_to_tex(self, ctx):
+	def pre_to_LaTeX(self, ctx):
 		pass
 
 class Document(object):
@@ -79,6 +79,9 @@ class Document(object):
 		return self.to_x(lambda i,*args: i.pre_to_html(*args), 
 				lambda i,*args: i.to_html(*args))
 
+	def to_LaTeX(self):
+		return self.to_x(lambda i,*args: i.pre_to_LaTeX(*args), 
+				lambda i,*args: i.to_LaTeX(*args))
 	def to_x(self, pre_call, call):
 		stack = [[True, self.root, None, [], dict()]]
 		while stack:
@@ -119,8 +122,15 @@ class TextNode(Node):
 		assert not children
 		return "<p>%s</p>" % self.text
 
+	def to_LaTeX(self, children, ctx):
+		assert not children
+		return self.text
+
 class NilItemNode(Node):
 	def to_html(self, children, ctx):
+		return ''.join(children)
+
+	def to_LaTeX(self, childrenm ctx):
 		return ''.join(children)
 
 class SectionNode(Node):
@@ -142,6 +152,11 @@ class SectionNode(Node):
 			ctx['section-depth'], self.title,
 			ctx['section-depth'],
 			ctx['section-depth'], c_text)
+	
+	def to_LaTeX(self, children, ctx):
+		c_text = '' if children is None else ''.join(children)
+		return """ %s
+			   %s """ % (self.title, c_text)
 
 class ArticleNode(SectionNode):
 	def pre_to_html(self, ctx):
@@ -153,6 +168,11 @@ class ArticleNode(SectionNode):
 			   <div class='article'>%s</div> """ % (
 				self.title, c_text)
 
+	def to_LaTeX(self, children, ctx):
+		c_text = '' if children is None else ''.join(children)
+		return """ %s
+			   %s """ % (self.title, c_text)
+
 class NBNode(SectionNode):
 	def pre_to_html(self, ctx):
 		pass
@@ -162,6 +182,11 @@ class NBNode(SectionNode):
 		return """ <div class="NBTitle">%s</div>
 			   <div class='NB'>%s</div> """ % (
 				self.title, c_text)
+
+	def to_LaTeX(self, children, ctx):
+		c_text = '' if children is None else ''.join(children)
+		return """ %s
+			   %s """ % (self.title, c_text)
 
 if __name__ == '__main__':
 	import codecs
