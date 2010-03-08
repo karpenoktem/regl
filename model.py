@@ -227,9 +227,14 @@ class ArticleNode(SectionNode):
 
 	def to_LaTeX(self, children, ctx):
 		c_text = '' if children is None else ''.join(children)
-		return r"""\begin{art}%s
-			   %s
-			   \end{art} """ % (self.title, c_text)
+		title = self.title
+		return r"""
+			\theoremstyle{definition}
+				\newtheorem*{%(title)s}{%(title)s}
+			\begin{%(title)s}
+			   %(text)s
+			   \end{%(title)s} """ % {"title": title,
+			   			  "text": c_text}
 
 class NBNode(SectionNode):
 	def pre_to_html(self, ctx):
