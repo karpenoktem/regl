@@ -1,0 +1,25 @@
+#!/usr/bin/env python
+
+import sys
+import codecs
+from grammar import regl
+from model import Document
+from lexer import ReglLexer
+
+if __name__ == '__main__':
+	to_close = []
+	if len(sys.argv) > 1:
+		if len(sys.argv) > 2:
+			fo = codecs.open(sys.argv[2], 'w', 'utf-8')
+			to_close.append(fo)
+		else:
+			fo = sys.stdout
+		fi = codecs.open(sys.argv[1], 'r', 'utf-8')
+		to_close.append(fi)
+	else:
+		fi = sys.stdin
+	doc = Document.from_parseTree(regl.parseString(
+			''.join(ReglLexer(fi)))[0])
+	fo.write(doc.to_LaTeX())
+	for f in to_close:
+		f.close()
