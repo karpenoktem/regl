@@ -31,12 +31,21 @@ charNames = (
 		(u"\xa7", sectionSignTok),
 		(u"\u20ac", "<euro-sign>"))
 
-def createCharMap():
+LaTeXCharNames = (
+		(u"\xe9", r"\'e"),
+		(u"\xeb", r"\"e"),
+		(u"\xf3", r"\'o"),
+		(u"\xa7", sectionSignTok),
+		(u"\u20ac", r"\euro"))
+
+def createCharMap(n):
 	charMap = {}
 	for c in allowedChars:
 		charMap[c]=c
-	for c,n in charNames:
+	for c,n in n:
 		charMap[c]=n
 	return charMap
-charMap = createCharMap()  # can decorators do this?
+charMap = createCharMap(charNames)  # can decorators do this?
 charMapI = dict_invert(charMap)
+LaTeXCharMap = createCharMap(LaTeXCharNames)  # can decorators do this?
+LaTeXCharMapI = dict_invert(LaTeXCharMap)
