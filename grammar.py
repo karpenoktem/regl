@@ -15,7 +15,7 @@ escapedChar = (Literal("<") + Word(alphas + "-") + Literal(">"))\
 
 def wordParseAction(t):
 	word = u''.join(t)
-	#return escapedChar.transformString(word)
+	return escapedChar.transformString(word)
 	return word
 
 def specWord(chrs):
