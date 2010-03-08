@@ -113,7 +113,51 @@ class RootNode(Node):
 	def to_html(self, children, ctx):
 		return ''.join(children)
 	def to_LaTeX(self, children, ctx):
-		return ''.join(children)
+		c_text = ''.join(children)
+		return r"""
+		\documentclass[dutch]{article}
+		\usepackage{babel}
+		\usepackage{amsthm}
+		\usepackage{eurosym}
+
+		\newcommand{\noun}[1]{\textsc{#1}}
+
+		\newcommand{\comment}[1]{
+		\begin{enumerate}
+		\footnotesize
+		\item[//] \emph{#1}
+		\end{enumerate}}
+		\newcommand{\stub}[1]{\comment{Nog te herschrijven.}}
+		\newcommand{\stref}[1]{ST#1}
+		\newcommand{\defn}[1]{\textbf{#1}}
+
+		\newtheoremstyle{comment}%
+			{3pt}       % Space Above
+			{3pt}       % Space below
+			{\footnotesize\hangindent=\parindent}    % Body font
+			{\parindent}          % Indent amount 1
+			{\bfseries} % Theorem head font
+			{.}         % Punctuation after theorem head
+			{.5em}      % Space after theorem head
+			{}          % Theorem head space
+
+
+
+		\theoremstyle{definition}
+			\newtheorem{art}{Artikel}
+		\theoremstyle{comment}
+			\newtheorem{cmt}[art]{NB}
+
+		\begin{document}
+
+		\title{wur}
+		\author{wur}
+
+		\maketitle
+
+		\end{document} """
+
+
 
 class TextNode(Node):
 	def __init__(self, document, text):
