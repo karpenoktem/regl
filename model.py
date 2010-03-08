@@ -131,17 +131,15 @@ class RootNode(Node):
 		\newcommand{\stref}[1]{ST#1}
 		\newcommand{\defn}[1]{\textbf{#1}}
 
-		\newtheoremstyle{comment}%
-			{3pt}       % Space Above
-			{3pt}       % Space below
-			{\footnotesize\hangindent=\parindent}    % Body font
-			{\parindent}          % Indent amount 1
-			{\bfseries} % Theorem head font
-			{.}         % Punctuation after theorem head
-			{.5em}      % Space after theorem head
-			{}          % Theorem head space
-
-
+		\newtheoremstyle{comment}%%
+			{3pt}       %% Space Above
+			{3pt}       %% Space below
+			{\footnotesize\hangindent=\parindent}    %% Body font
+			{\parindent}          %% Indent amount 1
+			{\bfseries} %% Theorem head font
+			{.}         %% Punctuation after theorem head
+			{.5em}      %% Space after theorem head
+			{}          %% Theorem head space
 
 		\theoremstyle{definition}
 			\newtheorem{art}{Artikel}
@@ -150,12 +148,11 @@ class RootNode(Node):
 
 		\begin{document}
 
-		\title{wur}
-		\author{wur}
+		%s
 
 		\maketitle
 
-		\end{document} """
+		\end{document} """ % c_text
 
 
 
@@ -191,6 +188,8 @@ class SectionNode(Node):
 		ctx['section-depth'] += 1
 		return ctx
 
+	pre_to_LaTeX = pre_to_html
+
 	def to_html(self, children, ctx):
 		c_text = '' if children is None else ''.join(children)
 		return """ <h%s>%s</h%s>
@@ -201,8 +200,20 @@ class SectionNode(Node):
 	
 	def to_LaTeX(self, children, ctx):
 		c_text = '' if children is None else ''.join(children)
-		return """ %s
-			   %s """ % (self.title, c_text)
+		depth = ctx['section-depth']
+		if depth == 1:
+			templ = r"""\title{%s}
+				     \maketitle
+				     %s"""
+		elif depth == 2:
+			templ = r"""\section*{%s}
+				     %s """
+		elif depth == 3:
+			templ = r"""\subsection*{%s}
+				     %s """
+		else:
+			templ = r"wur %s %s"
+		return templ % (self.title, c_text)
 
 class ArticleNode(SectionNode):
 	def pre_to_html(self, ctx):
@@ -216,8 +227,9 @@ class ArticleNode(SectionNode):
 
 	def to_LaTeX(self, children, ctx):
 		c_text = '' if children is None else ''.join(children)
-		return """ %s
-			   %s """ % (self.title, c_text)
+		return r"""\begin{art}%s
+			   %s
+			   \end{art} """ % (self.title, c_text)
 
 class NBNode(SectionNode):
 	def pre_to_html(self, ctx):
