@@ -112,6 +112,8 @@ class Document(object):
 class RootNode(Node):
 	def to_html(self, children, ctx):
 		return ''.join(children)
+	def to_LaTeX(self, children, ctx):
+		return ''.join(children)
 
 class TextNode(Node):
 	def __init__(self, document, text):
@@ -193,5 +195,5 @@ if __name__ == '__main__':
 	with codecs.open('test.regl', 'r', 'utf-8') as f:
 		doc = Document.from_parseTree(regl.parseString(
 				''.join(ReglLexer(f)))[0])
-		with codecs.open('test.html', 'w', 'utf-8') as f:
-			f.write(doc.to_html())
+		with codecs.open('test.tex', 'w', 'utf-8') as f2:
+			f2.write(doc.to_LaTeX())
