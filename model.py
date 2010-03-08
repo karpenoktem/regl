@@ -2,6 +2,7 @@ from grammar import Item, regl
 from StringIO import StringIO
 from lexer import ReglLexer
 import conf
+import re
 
 class Node(object):
 	def __init__(self, document, children=None):
@@ -160,6 +161,7 @@ class TextNode(Node):
 	def __init__(self, document, text):
 		super(TextNode, self).__init__(document)
 		self.text = text
+		self.re_keyword = re.compile(r'\*((?:\w\s?)*)\*')
 	
 	def to_html(self, children, ctx):
 		assert not children
@@ -167,7 +169,8 @@ class TextNode(Node):
 
 	def to_LaTeX(self, children, ctx):
 		assert not children
-		return self.text
+		text = self.re_keyword.sub(r'\defn{\1}', self.text)
+		return text
 
 class NilItemNode(Node):
 	def to_html(self, children, ctx):
