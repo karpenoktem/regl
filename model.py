@@ -199,20 +199,30 @@ class SectionNode(Node):
 			ctx['section-depth'], c_text)
 	
 	def to_LaTeX(self, children, ctx):
-		c_text = '' if children is None else ''.join(children)
 		depth = ctx['section-depth']
+		if children is None:
+			children = ()
 		if depth == 1:
 			templ = r"""\title{%s}
 				     \maketitle
 				     %s"""
+			c_text = ''.join(children)
 		elif depth == 2:
 			templ = r"""\section*{%s}
 				     %s """
+			c_text = ''.join(children)
 		elif depth == 3:
 			templ = r"""\subsection*{%s}
 				     %s """
+			c_text = ''.join(children)
+		elif depth == 4:
+			templ = r"""\begin{enumerate}
+				    \item[%s] %s 
+		  		    \end{enumerate} """
+			c_text = ''.join(children)
 		else:
 			templ = r"wur %s %s"
+			c_text = ''.join(children)
 		return templ % (self.title, c_text)
 
 class ArticleNode(SectionNode):
