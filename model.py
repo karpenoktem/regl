@@ -162,6 +162,7 @@ class TextNode(Node):
 		super(TextNode, self).__init__(document)
 		self.text = text
 		self.re_keyword = re.compile(r'\*((?:\w\s?)*)\*')
+		self.re_quote = re.compile(r'"([^"]*)"')
 	
 	def to_html(self, children, ctx):
 		assert not children
@@ -170,6 +171,7 @@ class TextNode(Node):
 	def to_LaTeX(self, children, ctx):
 		assert not children
 		text = self.re_keyword.sub(r'\defn{\1}', self.text)
+		text = self.re_quote.sub(r"``\1''", text)
 		return text
 
 class NilItemNode(Node):
@@ -202,20 +204,30 @@ class SectionNode(Node):
 			ctx['section-depth'], c_text)
 	
 	def to_LaTeX(self, children, ctx):
-		c_text = '' if children is None else ''.join(children)
 		depth = ctx['section-depth']
+		if children is None:
+			children = ()
 		if depth == 1:
 			templ = r"""\title{%s}
 				     \maketitle
 				     %s"""
+			c_text = ''.join(children)
 		elif depth == 2:
 			templ = r"""\section*{%s}
 				     %s """
+			c_text = ''.join(children)
 		elif depth == 3:
 			templ = r"""\subsection*{%s}
 				     %s """
+			c_text = ''.join(children)
+		elif depth == 4:
+			templ = r"""\begin{enumerate}
+				    \item[%s] %s 
+		  		    \end{enumerate} """
+			c_text = ''.join(children)
 		else:
 			templ = r"wur %s %s"
+			c_text = ''.join(children)
 		return templ % (self.title, c_text)
 
 class ArticleNode(SectionNode):
