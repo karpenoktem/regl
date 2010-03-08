@@ -157,6 +157,7 @@ class TextNode(Node):
 		super(TextNode, self).__init__(document)
 		self.text = text
 		self.re_keyword = re.compile(r'\*((?:\w\s?)*)\*')
+		self.re_quote = re.compile(r'"([^"]*)"')
 	
 	def to_html(self, children, ctx):
 		assert not children
@@ -165,6 +166,7 @@ class TextNode(Node):
 	def to_LaTeX(self, children, ctx):
 		assert not children
 		text = self.re_keyword.sub(r'\defn{\1}', self.text)
+		text = self.re_quote.sub(r"``\1''", text)
 		return text
 
 class NilItemNode(Node):
