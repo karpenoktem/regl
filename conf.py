@@ -28,6 +28,7 @@ charNames = (
 		(u"\xe9", "<e-acute>"),
 		(u"\xeb", "<e-umlaut>"),
 		(u"\xf3", "<o-acute>"),
+		(u"\xf6", "<o-umlaut>"),
 		(u"\xa7", sectionSignTok),
 		(u"\u20ac", "<euro-sign>"))
 
@@ -35,6 +36,7 @@ LaTeXCharNames = (
 		(u"\xe9", r"\'e"),
 		(u"\xeb", r"\"e"),
 		(u"\xf3", r"\'o"),
+		(u"\xf6", r"\"o"),
 		(u"\xa7", sectionSignTok),
 		(u"\u20ac", r"\euro"))
 
