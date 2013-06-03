@@ -34,6 +34,8 @@ charNames = (
 		(u"\u20ac", "<euro-sign>"))
 
 LaTeXCharNames = (
+		(u"<", r"["),
+		(u">", r"]"),
 		(u"\xe9", r"\'e"),
 		(u"\xeb", r"\"e"),
 		(u"\xf3", r"\'o"),

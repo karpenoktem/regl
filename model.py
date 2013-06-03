@@ -122,6 +122,7 @@ class RootNode(Node):
 		\usepackage{eurosym}
 		\usepackage{makeidx}
 
+                \date{}
 		\makeindex
 		\newcommand{\noun}[1]{\textsc{#1}}
 
@@ -240,6 +241,8 @@ class SectionNode(Node):
 		else:
 			templ = r"wur %s %s"
 			c_text = ''.join(children)
+		if self.title == '-':
+			return c_text
 		return templ % (self.title, c_text)
 
 class ArticleNode(SectionNode):
