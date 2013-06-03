@@ -116,8 +116,8 @@ class RootNode(Node):
 	def to_LaTeX(self, children, ctx):
 		c_text = ''.join(children)
 		text = r"""
-		\documentclass[dutch]{article}
-		\usepackage{babel}
+		\documentclass{article}
+		\usepackage[dutch]{babel}
 		\usepackage{amsthm}
 		\usepackage{eurosym}
 		\usepackage{makeidx}
