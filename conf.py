@@ -38,7 +38,7 @@ LaTeXCharNames = (
 		(u"\xeb", r"\"e"),
 		(u"\xf3", r"\'o"),
 		(u"\xf6", r"\"o"),
-		(u"\x81", "r\"u"),		(
+		(u"\x81", r"\"u"),
 		(u"\xa7", sectionSignTok),
 		(u"\u20ac", r"\euro"))
 
