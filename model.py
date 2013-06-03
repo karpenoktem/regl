@@ -232,6 +232,11 @@ class SectionNode(Node):
 				    \item[%s] %s 
 		  		    \end{enumerate} """
 			c_text = ''.join(children)
+		elif depth == 6:
+			templ = r"""\begin{enumerate}
+				    \item[%s] %s 
+		  		    \end{enumerate} """
+			c_text = ''.join(children)
 		else:
 			templ = r"wur %s %s"
 			c_text = ''.join(children)
