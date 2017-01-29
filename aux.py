@@ -1,3 +1,5 @@
+import six
+
 id = lambda x: x 
 
 def const(x):
@@ -13,7 +15,7 @@ def compit(it):
 	return reduce(comp2, it, id)
 
 def dict_invert(d):
-	return dict([(v,k) for (k,v) in d.iteritems()])
+	return dict([(v,k) for (k,v) in six.iteritems(d)])
 
 def regions_satisfying(pred, lst):
 	"""Returns the minimal amount of pairs (x_i,y_i) such that

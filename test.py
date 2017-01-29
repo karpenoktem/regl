@@ -1,5 +1,5 @@
-from grammar import *
-from lexer import *
+from regl.grammar import *
+from regl.lexer import *
 from codecs import open
 from string import whitespace, ascii_letters, digits, punctuation
 

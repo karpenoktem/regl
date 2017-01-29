@@ -1,6 +1,6 @@
 from string import whitespace, ascii_letters, digits
 
-from aux import dict_invert
+from regl.aux import dict_invert
 
 punctuation = "@!,.'\"\\/()-:;*?<>"
 tokTok = "^"

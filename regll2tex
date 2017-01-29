@@ -2,9 +2,9 @@
 
 import sys
 import codecs
-from grammar import regl
-from model import Document
-from lexer import ReglLexer
+from regl.grammar import regl
+from regl.model import Document
+from regl.lexer import ReglLexer
 
 if __name__ == '__main__':
 	if sys.stdout.encoding is None or \

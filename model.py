@@ -1,7 +1,6 @@
-from grammar import Item, regl
-from StringIO import StringIO
-from lexer import ReglLexer
-import conf
+from regl.grammar import Item, regl
+from regl.lexer import ReglLexer
+from regl import conf
 import re
 
 class Node(object):
@@ -72,7 +71,7 @@ class Document(object):
 
 	@staticmethod
 	def from_string(s):
-		f = StringIO(s)
+		f = six.StringIO(s)
 		return Document.from_parseTree(regl.parseString(
 				''.join(ReglLexer(f)))[0])
 

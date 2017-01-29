@@ -1,8 +1,8 @@
 from itertools import takewhile
 from string import whitespace
 
-from aux import comp, const, regions_satisfying, string_regions_replace
-from conf import charMap, indentTok, dedentTok, vspaceTok, itemTok, \
+from regl.aux import comp, const, regions_satisfying, string_regions_replace
+from regl.conf import charMap, indentTok, dedentTok, vspaceTok, itemTok, \
 		lineEndTok, tokTok, hspaceTok
 
 __all__ = ['Lexer', 'Injector', 'isToken', 'isWhite', 

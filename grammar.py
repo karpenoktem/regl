@@ -2,8 +2,8 @@ from pyparsing import Suppress, Literal, Word, ZeroOrMore, OneOrMore,  \
 		Optional, stringEnd, alphas, Forward, Empty, Group, \
 		quotedString
 
-import conf
-from aux import chop
+from regl import conf
+from regl.aux import chop
 
 indentTok, dedentTok, lineEndTok, hspaceTok, superTok, parTok = \
 		map(Suppress, [conf.indentTok, conf.dedentTok, 
