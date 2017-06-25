@@ -1,6 +1,7 @@
 from regl.grammar import Item, regl
 from regl.lexer import ReglLexer
 from regl import conf
+import six
 import re
 
 class Node(object):
@@ -41,7 +42,7 @@ class Document(object):
 		def section_handler(self, i, p):
 			assert isinstance(i, tuple)
 			for c in i:
-				if isinstance(c, basestring):
+				if isinstance(c, six.string_types):
 					p.children.append(
 						TextNode(self.document, c))
 					assert not self.children_of(c)
@@ -154,8 +155,8 @@ class RootNode(Node):
 		\printindex
 
 		\end{document} """ % c_text
-		for c, r in conf.LaTeXCharMap.iteritems():
-			text = text.replace(c, r)
+		for c, r in six.iteritems(conf.LaTeXCharMap):
+		    text = text.replace(c, r)
 		return text
 
 
