@@ -4,7 +4,7 @@ from codecs import open
 from string import whitespace, ascii_letters, digits, punctuation
 
 def _print(s):
-	print s,
+	print(s, end=' ')
 
 def test_parser():
 	with open("test.lexed") as file:

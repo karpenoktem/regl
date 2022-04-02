@@ -173,7 +173,7 @@ class TextNode(Node):
 
 	def to_LaTeX(self, children, ctx):
 		assert not children
-		text = self.re_keyword.sub(r'\defn{\1}', self.text)
+		text = self.re_keyword.sub(r'\\defn{\1}', self.text)
 		text = self.re_quote.sub(r"``\1''", text)
 		return text
 

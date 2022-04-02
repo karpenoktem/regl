@@ -6,15 +6,15 @@ from regl import conf
 from regl.aux import chop
 
 indentTok, dedentTok, lineEndTok, hspaceTok, superTok, parTok = \
-		map(Suppress, [conf.indentTok, conf.dedentTok, 
+		list(map(Suppress, [conf.indentTok, conf.dedentTok, 
 			conf.lineEndTok, conf.hspaceTok, 
-			conf.superTok, conf.parTok])
+			conf.superTok, conf.parTok]))
 
 escapedChar = (Literal("<") + Word(alphas + "-") + Literal(">"))\
 		.setParseAction(lambda t: conf.charMapI[''.join(t)])
 
 def wordParseAction(t):
-	word = u''.join(t)
+	word = ''.join(t)
 	return escapedChar.transformString(word)
 	return word
 
@@ -23,11 +23,11 @@ def specWord(chrs):
 
 def specWords(chrs):
 	return OneOrMore(specWord(chrs))\
-			.setParseAction(lambda t: u' '.join(t))
+			.setParseAction(lambda t: ' '.join(t))
 
 words = specWords(conf.wordChars)
 line = words + lineEndTok
-lines = OneOrMore(line).setParseAction(lambda t: u' '.join(t))
+lines = OneOrMore(line).setParseAction(lambda t: ' '.join(t))
 
 class Item:
 	def __init__(self, name, content):

@@ -23,26 +23,26 @@ wordChars = ascii_letters + digits + punctuation
 allowedChars = wordChars + specialChars + whitespace
 
 charNames = (
-		(u"<", "<chevron-open>"),
-		(u">", "<chevron-close>"),
-		(u"\xe9", "<e-acute>"),
-		(u"\xeb", "<e-umlaut>"),
-		(u"\xf3", "<o-acute>"),
-		(u"\xf6", "<o-umlaut>"),
-		(u"\x81", "<u-umlaut>"),
-		(u"\xa7", sectionSignTok),
-		(u"\u20ac", "<euro-sign>"))
+		("<", "<chevron-open>"),
+		(">", "<chevron-close>"),
+		("\xe9", "<e-acute>"),
+		("\xeb", "<e-umlaut>"),
+		("\xf3", "<o-acute>"),
+		("\xf6", "<o-umlaut>"),
+		("\x81", "<u-umlaut>"),
+		("\xa7", sectionSignTok),
+		("\u20ac", "<euro-sign>"))
 
 LaTeXCharNames = (
-		(u"<", r"["),
-		(u">", r"]"),
-		(u"\xe9", r"\'e"),
-		(u"\xeb", r"\"e"),
-		(u"\xf3", r"\'o"),
-		(u"\xf6", r"\"o"),
-		(u"\x81", r"\"u"),
-		(u"\xa7", sectionSignTok),
-		(u"\u20ac", r"\euro"))
+		("<", r"["),
+		(">", r"]"),
+		("\xe9", r"\'e"),
+		("\xeb", r"\"e"),
+		("\xf3", r"\'o"),
+		("\xf6", r"\"o"),
+		("\x81", r"\"u"),
+		("\xa7", sectionSignTok),
+		("\u20ac", r"\euro"))
 
 def createCharMap(n):
 	charMap = {}

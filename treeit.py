@@ -49,7 +49,7 @@ class UpDownError(Exception):
 
 
 if __name__=="__main__":
-	print "Testing module treeit"
+	print("Testing module treeit")
 	d = (1, 2, 3, 2, 2, 3, 1, 0)
 	s = (1, 1, 1, -1, 0, 1, -2, -1)
 	assert tuple(depth2step(d)) == s
